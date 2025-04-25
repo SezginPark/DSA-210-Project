@@ -31,6 +31,38 @@ The aim of this project is whether updates and discounts can make lasting player
 - Financial strategies: Understanding how pricing models affect long-term player retention can provide insights into effective revenue strategies.
 - Data analysis: By examining historical player count data, I aim to identify patterns that help predict the success of updates and discounts.
 
+  ## Hypotheses
+
+### Hypothesis 1: Sale vs Non-Sale Player Counts  
+- **H₀:** The mean monthly average players in sale months equals that in non-sale months.  
+- **H₁:** The mean monthly average players in sale months is greater than in non-sale months.
+
+---
+
+### Hypothesis 2: Sale-Month vs Previous Month  
+- **H₀:** The mean difference `(avg_players_sale − avg_players_prev_month)` is zero.  
+- **H₁:** The mean difference `(avg_players_sale − avg_players_prev_month)` is not zero.
+
+---
+
+### Hypothesis 3: Indie vs AAA Percent Gain  
+- **H₀:** The median percent gain during sales for Indie titles equals that for AAA titles.  
+- **H₁:** The median percent gain during sales for Indie titles is greater than that for AAA titles.
+
+---
+
+### Hypothesis 4: Price Elasticity  
+- **H₀:** The correlation between a game’s list price and its percent gain during sales is zero.  
+- **H₁:** The correlation between a game’s list price and its percent gain during sales is non-zero.  
+*(Alternatively, if you expect pricier games to gain more, use “greater than zero” for H₁.)*
+
+---
+
+### Hypothesis 5: Update-Driven Spikes  
+- **H₀:** The mean month-over-month percent change in average players for update months is zero.  
+- **H₁:** The mean month-over-month percent change in average players for update months is greater than zero.
+
+
 # Dataset
 - Player count : monthly active player .
 - Discounts : time duration and percentage.
