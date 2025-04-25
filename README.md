@@ -101,4 +101,4 @@ This project analyzes how game updates and major Steam discount events influence
 - **Time-Series Modeling:** ARIMA or causal impact models could quantify the duration of sale/update effects.
 
 ---
-
+I acknowlage using LLM for grammer and manual data gathering
