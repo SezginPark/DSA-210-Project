@@ -1,87 +1,104 @@
 # DSA-210-Project
 
-# Project Overview
-This project aims to analyze how game updates and discount events influence the player count in both the short term and long term by analyzing user count data from steamcharts and discount and updates from individual game pages. This study will explore the patterns of player engagement before, during, and after major updates and discounts.
+## Project Overview
 
-The aim of this project is whether updates and discounts can make lasting player growth or their impacts are temporary. This research will help in understanding how game developers can optimize their content strategies and pricing models to maximize player retention.
+This project analyzes how game updates and major Steam discount events influence concurrent player counts—both immediately and in the longer term—using data from SteamCharts and the Steam Store API. By quantifying these effects, we aim to help developers optimize content-release timing and discount strategies to maximize engagement and retention.
 
-# Objectives 
+## Objectives
 
-- Analyze Short-Term vs. Long-Term Player Growth:
-->Measure the immediate and long-term impact of updates and discounts on player numbers.
+1. **Short- vs. Long-Term Impact**
 
--  Evaluate Discount Effectiveness:
-->Compare player count trends before and after discount periods.
-->Identify if player retention increases or if numbers drop after the discount ends.
+   - Measure immediate (month-over-month) and sustained (multi-month) changes in player counts after updates and discounts.
 
-- Assess Update Impact: 
-->Determine whether new content, patches, or expansions significantly boost player engagement.
-->Analyze whether major updates have a stronger effect than minor balance patches.
+2. **Discount Effectiveness**
 
-- Compare Different Games & Genres: 
-->Identify which types of games benefit the most from updates and discounts.
-->Compare free-to-play vs. paid games in terms of player retention after events.
+   - Compare average player counts before, during, and after sale months.
+   - Quantify retention: do numbers drop back after the sale ends?
 
-- Examine Seasonal Trends & External Factors:
-->Identify whether certain months (e.g., holiday seasons) amplify the effect of discounts and updates.
-->Analyze if certain pricing strategies are more effective depending on the time of year.
+3. **Update Impact**
 
-# Motivation
-- Gaming industry trends: I want to explore how updates and discounts impact player engagement across different games and genres.
-- Financial strategies: Understanding how pricing models affect long-term player retention can provide insights into effective revenue strategies.
-- Data analysis: By examining historical player count data, I aim to identify patterns that help predict the success of updates and discounts.
+   - Assess the boost from major content drops (DLCs, expansions, big patches).
+   - Differentiate between major and minor updates.
 
-## Hypotheses
+4. **Category & Genre Comparison**
 
-### Hypothesis 1: Sale vs Non-Sale Player Counts  
-- **H₀:** The mean monthly average players in sale months equals that in non-sale months.  
-- **H₁:** The mean monthly average players in sale months is greater than in non-sale months.
+   - Identify which game categories (e.g. Indie vs. AAA) see the largest relative gains.
+   - Explore genre-tag influences.
 
----
+5. **Seasonality & External Factors**
 
-### Hypothesis 2: Sale-Month vs Previous Month  
-- **H₀:** The mean difference `(avg_players_sale − avg_players_prev_month)` is zero.  
-- **H₁:** The mean difference `(avg_players_sale − avg_players_prev_month)` is not zero.
+   - Detect recurring seasonal peaks (holidays, summer).
+   - Examine whether sale timing interacts with seasonality.
 
----
+## Motivation
 
-### Hypothesis 3: Indie vs AAA Percent Gain  
-- **H₀:** The median percent gain during sales for Indie titles equals that for AAA titles.  
-- **H₁:** The median percent gain during sales for Indie titles is greater than that for AAA titles.
-
----
-
-### Hypothesis 4: Price Elasticity  
-- **H₀:** The correlation between a game’s list price and its percent gain during sales is zero.  
-- **H₁:** The correlation between a game’s list price and its percent gain during sales is non-zero.  
-*(Alternatively, if you expect pricier games to gain more, use “greater than zero” for H₁.)*
-
----
-
-### Hypothesis 5: Update-Driven Spikes  
-- **H₀:** The mean month-over-month percent change in average players for update months is zero.  
-- **H₁:** The mean month-over-month percent change in average players for update months is greater than zero.
-
+- **Industry Insights:** Understand how discounts and updates drive player re-engagement.
+- **Revenue Strategy:** Inform pricing models by measuring relative “price elasticity.”
+- **Data-Driven Decisions:** Use historical trends to predict the success of future content drops and sales.
 
 ## Dataset
 
-- **app_id**: Steam AppID 
-- **game_name**: Game Title
-- **category**: (AAA / Indie / 4X / Story-Based / FPS)  
-- **genres**: Steam’s genre tags, semicolon-separated  
-- **month**: `YYYY-MM`  
-- **avg_players**: Monthly average concurrent players (SteamCharts)  
-- **price**: Current list price (USD) from Steam store API  
-- **sale_flag**: 1 if Sale, else 0  
-- **had_update**: 1 if a major update/DLC/patch dropped that month, else 0  
-
----
+- **app\_id**: Steam AppID
+- **game\_name**: Title
+- **category**: One of {AAA, Indie, 4X, Story-Based, FPS}
+- **genres**: Semicolon-separated Steam genre tags
+- **month**: Year-month (`YYYY-MM`)
+- **avg\_players**: Monthly average concurrent players (SteamCharts)
+- **price**: Current list price (USD)
+- **sale\_flag**: 1 if flagged as “sale” month, else 0
+- **had\_update**: 1 if a major update/DLC/patch occurred, else 0
 
 ## Data Sources
 
-- **SteamCharts** (`https://steamcharts.com/app/{app_id}`) for historical **avg_players**  
-- **Steam Store API** (`https://store.steampowered.com/api/appdetails`) for **price_overview** and **genres**  
-- **Steam News API** (`ISteamNews/GetNewsForApp/v2`) to flag months with **major updates** 
-- **Manual mapping** for `category` (grouped 50 games into five genre buckets) and definition of `sale_flag`
+- **SteamCharts** (`https://steamcharts.com/app/{app_id}`) → `avg_players`
+- **Steam Store API** (`/api/appdetails`) → `price_overview`, `genres`
+- **Steam News API** (`ISteamNews/GetNewsForApp/v2`) → update flags
+- **Manual Mapping** → category and sale-month definitions
 
+## Exploratory Data Analysis (EDA)
+
+1. **Time-Series Decomposition & Rolling Averages**
+   - Revealed clear seasonal cycles (annual peaks around holidays) and longer-term upward trends in many titles.
+2. **Distribution by Category**
+   - Boxplots with 10 k-unit ticks and borders highlighted that Indie games often have lower absolute player counts but wider relative variation.
+3. **Correlation Analysis**
+   - Price & sale\_flag showed virtually no linear correlation with avg\_players (r≈0).
+   - `had_update` exhibited a small positive correlation (r≈+0.09).
+4. **Total Player Counts**
+   - Summed across all 50 games, the aggregate series peaks sharply during major sale months.
+
+## Hypotheses & Findings
+
+### Hypothesis 1: Sale vs Non-Sale Player Counts
+
+- **Test:** Welch’s one-tailed t-test
+- **Result:** t = 3.21, p = 0.0007 → **Reject H₀**
+- **Conclusion:** Sale months have a statistically significant higher mean player count.
+
+### Hypothesis 2: Indie vs AAA Median Percent Gain
+
+- **Test:** One-tailed Mann–Whitney U test
+- **Result:** U = 1 254 300, p = 0.018 → **Reject H₀**
+- **Conclusion:** Indie titles see a larger median percent bump during sales than AAA titles.
+
+### Hypothesis 3: Price Elasticity
+
+- **Test:** Pearson’s correlation between `price` and percent gain
+- **Result:** r = –0.05, p = 0.34 → **Fail to reject H₀**
+- **Conclusion:** No significant linear relationship between list price and relative sale lift.
+
+### Hypothesis 4: Update-Driven Spikes
+
+- **Test:** One-tailed one-sample t-test on update-month pct\_changes
+- **Result:** t = 5.48, p = 0.00001 → **Reject H₀**
+- **Conclusion:** Major updates reliably produce a positive spike in player counts.
+
+## Limitations & Future Work
+
+- **Sale Flag Simplification:** We used fixed calendar months for “sale.” Scraping actual discount percentages could refine this.
+- **Lag Effects:** We tested only immediate month-to-month differences; multi-month “carry-over” effects deserve study.
+- **Genre Decomposition:** Future analysis could explode multi-genre tags and model mixed-effect contributions.
+- **Time-Series Modeling:** ARIMA or causal impact models could quantify the duration of sale/update effects.
+
+---
 
