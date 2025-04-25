@@ -31,7 +31,7 @@ The aim of this project is whether updates and discounts can make lasting player
 - Financial strategies: Understanding how pricing models affect long-term player retention can provide insights into effective revenue strategies.
 - Data analysis: By examining historical player count data, I aim to identify patterns that help predict the success of updates and discounts.
 
-  ## Hypotheses
+## Hypotheses
 
 ### Hypothesis 1: Sale vs Non-Sale Player Counts  
 - **H₀:** The mean monthly average players in sale months equals that in non-sale months.  
@@ -63,15 +63,25 @@ The aim of this project is whether updates and discounts can make lasting player
 - **H₁:** The mean month-over-month percent change in average players for update months is greater than zero.
 
 
-# Dataset
-- Player count : monthly active player .
-- Discounts : time duration and percentage.
-- Updates : type of update.
-- Monetization : how does the developers aim to make money of off the game.
-- External sources : major gaming events, holidays, new relaises.
+## Dataset
 
-# Data Sources
-- (https://steamcharts.com) for active player data.
-- Official Game Websites for updates, discounts and event data.
-  
+- **app_id**: Steam AppID 
+- **game_name**: Game Title
+- **category**: (AAA / Indie / 4X / Story-Based / FPS)  
+- **genres**: Steam’s genre tags, semicolon-separated  
+- **month**: `YYYY-MM`  
+- **avg_players**: Monthly average concurrent players (SteamCharts)  
+- **price**: Current list price (USD) from Steam store API  
+- **sale_flag**: 1 if Sale, else 0  
+- **had_update**: 1 if a major update/DLC/patch dropped that month, else 0  
+
+---
+
+## Data Sources
+
+- **SteamCharts** (`https://steamcharts.com/app/{app_id}`) for historical **avg_players**  
+- **Steam Store API** (`https://store.steampowered.com/api/appdetails`) for **price_overview** and **genres**  
+- **Steam News API** (`ISteamNews/GetNewsForApp/v2`) to flag months with **major updates** 
+- **Manual mapping** for `category` (grouped 50 games into five genre buckets) and definition of `sale_flag`
+
 
