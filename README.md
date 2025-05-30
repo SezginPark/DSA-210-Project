@@ -99,6 +99,22 @@ This project analyzes how game updates and major Steam discount events influence
 - **Lag Effects:** We tested only immediate month-to-month differences; multi-month “carry-over” effects deserve study.
 - **Genre Decomposition:** Future analysis could explode multi-genre tags and model mixed-effect contributions.
 - **Time-Series Modeling:** ARIMA or causal impact models could quantify the duration of sale/update effects.
+  
+## Machine Learning Pipeline
+
+- **Objective:** Forecast next‐month changes in concurrent player counts for each game.  
+- **Modeling Approach:**  
+  - Compared **Random Forest**, **Decision Tree**, and **kNN** regressors.  
+  - Used **time‐series cross‐validation** for hyperparameter tuning.  
+- **Final Model:** Random Forest Regressor  
+  - **Performance (hold‐out):**  
+    - R² ≈ 0.30  
+    - MAE ≈ 3 037 players  
+    - RMSE ≈ 6 790 players  
+- **Deployment:**  
+  - Serialized model → rf_player_change.pkl
+  - Serialized scaler → scaler_player_change.pkl  
+  - Batch script → predict_change.py producing predictions.csv each month  
 
 ---
 I acknowlage using LLM for grammer and manual data gathering
